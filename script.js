@@ -9,13 +9,17 @@ const audio = document.getElementById("bg-audio");
   Si Neocities no abre /Cariño, cambia esta línea por:
   const finalPage = "/Cariño.html";
 */
-const finalPage = "/Cariño";
+const finalPage = "/Carino.html";
 
 let isOpen = false;
 let openClicks = 0;
 let mobilePreviewDone = false;
 
 const isTouchDevice = window.matchMedia("(hover: none)").matches;
+
+if (isTouchDevice && audio) {
+  audio.preload = "none";
+}
 
 function startAudio() {
   if (!audio) return;
