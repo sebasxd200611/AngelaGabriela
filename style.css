@@ -1,0 +1,397 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  background: #000;
+  color: white;
+  overflow: hidden;
+  font-family: "Courier New", monospace;
+}
+
+.stage {
+  min-height: 100vh;
+  width: 100%;
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+
+.hint {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  color: rgba(255, 255, 255, 0.32);
+  font-size: 0.78rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  user-select: none;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.hint.hidden {
+  opacity: 0;
+}
+
+/* CONTENEDOR GENERAL DE LA HOJA */
+
+.paper {
+  position: relative;
+  width: clamp(150px, 26vw, 260px);
+  height: clamp(120px, 20vw, 205px);
+  cursor: pointer;
+  outline: none;
+  transform:
+    translate(var(--move-x, 0), var(--move-y, 0))
+    rotate(var(--rotate, -5deg))
+    scale(var(--scale, 1));
+  transform-origin: center;
+  transition:
+    width 1s cubic-bezier(0.19, 1, 0.22, 1),
+    height 1s cubic-bezier(0.19, 1, 0.22, 1),
+    transform 0.75s cubic-bezier(0.19, 1, 0.22, 1),
+    opacity 0.9s ease,
+    filter 0.9s ease;
+  animation: floating 4.5s ease-in-out infinite;
+}
+
+/* Hover en PC */
+
+@media (hover: hover) {
+  .paper.is-folded:hover {
+    transform: translateY(-12px) rotate(-5deg) scale(1.16);
+  }
+}
+
+/* Primer toque en celular */
+
+.paper.mobile-preview {
+  transform: translateY(-12px) rotate(-5deg) scale(1.16);
+}
+
+/* HOJA DOBLADA */
+
+.folded-face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  filter: drop-shadow(0 18px 26px rgba(0, 0, 0, 0.85));
+  transition:
+    opacity 0.55s ease,
+    transform 0.9s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.fold-panel {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(255, 120, 120, 0.25) 22px, transparent 23px),
+    repeating-linear-gradient(
+      to bottom,
+      #f2f0df 0px,
+      #f2f0df 20px,
+      rgba(75, 135, 220, 0.42) 21px
+    );
+  border: 1px solid rgba(30, 30, 30, 0.18);
+}
+
+.fold-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.4), transparent 42%),
+    linear-gradient(135deg, transparent, rgba(0, 0, 0, 0.12));
+  pointer-events: none;
+}
+
+.panel-1 {
+  transform: rotate(-2deg) translate(2px, 3px);
+  border-radius: 8px 2px 1px 3px;
+  filter: brightness(0.95);
+}
+
+.panel-2 {
+  transform: rotate(3deg) translate(-3px, 6px) skewY(-1deg);
+  border-radius: 3px 9px 2px 1px;
+  filter: brightness(0.88);
+}
+
+.panel-3 {
+  transform: rotate(2deg) translate(5px, -4px) skewX(1deg);
+  border-radius: 2px 1px 3px 8px;
+  filter: brightness(0.82);
+}
+
+.panel-4 {
+  transform: rotate(-3deg) translate(-4px, -2px);
+  border-radius: 1px 2px 8px 3px;
+  filter: brightness(0.9);
+}
+
+.fold-mark {
+  position: absolute;
+  background: rgba(40, 40, 40, 0.18);
+  pointer-events: none;
+}
+
+.mark-1 {
+  width: 1px;
+  height: 104%;
+  left: 50%;
+  top: -2%;
+  transform: rotate(2deg);
+}
+
+.mark-2 {
+  height: 1px;
+  width: 104%;
+  top: 50%;
+  left: -2%;
+  transform: rotate(-1deg);
+}
+
+/* HOJA ABIERTA */
+
+.open-face {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: scale(0.25) rotateX(75deg);
+  transform-origin: center;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: 6px 10px 7px 4px;
+  background:
+    linear-gradient(90deg, transparent 58px, rgba(255, 110, 110, 0.55) 59px, transparent 60px),
+    repeating-linear-gradient(
+      to bottom,
+      #f7f5e8 0px,
+      #f7f5e8 31px,
+      rgba(72, 132, 210, 0.45) 32px
+    );
+  box-shadow:
+    0 28px 80px rgba(0, 0, 0, 0.8),
+    inset 0 0 35px rgba(0, 0, 0, 0.08);
+  transition:
+    opacity 0.75s ease,
+    transform 1s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.open-face::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.75), transparent 23%),
+    radial-gradient(circle at 90% 80%, rgba(90, 55, 20, 0.12), transparent 28%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent 50%);
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+.holes {
+  position: absolute;
+  left: 22px;
+  top: 80px;
+  display: grid;
+  gap: 90px;
+  z-index: 2;
+}
+
+.holes span {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #000;
+  opacity: 0.2;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.5);
+}
+
+/* TEXTO DE LA NOTA */
+
+.note-text {
+  position: relative;
+  z-index: 3;
+  padding: 46px 34px 40px 82px;
+  color: #1c1c1c;
+  font-family: "Courier New", monospace;
+  max-height: 100%;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.note-text p {
+  margin: 0 0 13px;
+  font-size: clamp(0.66rem, 1.8vw, 0.86rem);
+  line-height: 1.7;
+}
+
+.note-text::-webkit-scrollbar {
+  width: 5px;
+}
+
+.note-text::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 999px;
+}
+
+.signature {
+  margin-top: 20px;
+  text-align: right;
+}
+
+/* ESTADO ABIERTO */
+
+.paper.is-open {
+  width: clamp(310px, 72vw, 570px);
+  height: clamp(455px, 82vh, 690px);
+  animation: none;
+  --rotate: -1deg;
+}
+
+.paper.is-open .folded-face {
+  opacity: 0;
+  transform: scale(1.5) rotateX(75deg);
+  pointer-events: none;
+}
+
+.paper.is-open .open-face {
+  opacity: 1;
+  transform: scale(1) rotateX(0deg);
+  pointer-events: auto;
+}
+
+/* Pulso cuando se hace clic en la nota abierta */
+
+.paper.jiggle .open-face {
+  animation: notePulse 0.65s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.paper.step-1 {
+  --scale: 0.82;
+  --move-x: -24px;
+  --move-y: 10px;
+  --rotate: 2deg;
+}
+
+.paper.step-2 {
+  --scale: 0.62;
+  --move-x: 32px;
+  --move-y: -18px;
+  --rotate: -4deg;
+}
+
+.paper.step-3 {
+  --scale: 0.42;
+  --move-x: -14px;
+  --move-y: 34px;
+  --rotate: 5deg;
+}
+
+.paper.step-4 {
+  --scale: 0.2;
+  --move-x: 0;
+  --move-y: -18px;
+  --rotate: 0deg;
+}
+
+.paper.disappear {
+  opacity: 0;
+  filter: blur(14px);
+  transform: translateY(-40px) rotate(0deg) scale(0.02);
+}
+
+@keyframes floating {
+  0%, 100% {
+    translate: 0 0;
+  }
+
+  50% {
+    translate: 0 -12px;
+  }
+}
+
+@keyframes notePulse {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+
+  35% {
+    transform: scale(0.93) rotate(-1.5deg);
+  }
+
+  70% {
+    transform: scale(1.045) rotate(1deg);
+  }
+
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+/* CELULAR */
+
+@media (max-width: 600px) {
+  .paper.is-open {
+    width: 88vw;
+    height: 72vh;
+  }
+
+  .note-text {
+    padding: 38px 24px 34px 58px;
+  }
+
+  .note-text p {
+    margin-bottom: 11px;
+    font-size: clamp(0.58rem, 2.8vw, 0.72rem);
+    line-height: 1.55;
+  }
+
+  .holes {
+    left: 18px;
+    top: 75px;
+    gap: 78px;
+  }
+
+  .holes span {
+    width: 11px;
+    height: 11px;
+  }
+
+  .hint {
+    bottom: 22px;
+    font-size: 0.68rem;
+    letter-spacing: 3px;
+  }
+
+  .paper.step-1 {
+    --scale: 0.8;
+    --move-x: -12px;
+    --move-y: 10px;
+  }
+
+  .paper.step-2 {
+    --scale: 0.6;
+    --move-x: 14px;
+    --move-y: -12px;
+  }
+
+  .paper.step-3 {
+    --scale: 0.4;
+    --move-x: -8px;
+    --move-y: 26px;
+  }
+}
