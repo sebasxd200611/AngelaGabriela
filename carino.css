@@ -20,8 +20,55 @@ body {
   text-shadow: 0 0 6px rgba(112, 255, 154, 0.35);
 }
 
+.crt-page {
+  position: relative;
+  overflow: hidden;
+}
+
+.crt-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.045) 0px,
+      rgba(255, 255, 255, 0.045) 1px,
+      rgba(0, 0, 0, 0.08) 2px,
+      rgba(0, 0, 0, 0.08) 4px
+    );
+  mix-blend-mode: screen;
+  opacity: 0.65;
+  animation: crt-flicker 0.18s steps(2, end) infinite;
+}
+
+.crt-page::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+  border: 18px solid rgba(0, 0, 0, 0.32);
+  border-radius: 28px;
+  background:
+    radial-gradient(
+      ellipse at center,
+      transparent 52%,
+      rgba(0, 0, 0, 0.16) 72%,
+      rgba(0, 0, 0, 0.72) 100%
+    );
+  box-shadow:
+    inset 0 0 45px rgba(0, 0, 0, 0.8),
+    inset 0 0 120px rgba(40, 80, 130, 0.18),
+    0 0 35px rgba(0, 0, 0, 0.9);
+  opacity: 0.92;
+}
+
 .container {
   position: relative;
+  z-index: 1;
   width: min(940px, 100%);
   padding: clamp(24px, 3.7vw, 42px);
   border-radius: 34px;
@@ -33,39 +80,6 @@ body {
     inset 0 2px 5px rgba(178, 255, 192, 0.22),
     inset 0 -16px 30px rgba(0, 0, 0, 0.78);
   transform: perspective(1200px) rotateX(2deg) rotateY(-1deg);
-  animation: crt-flicker 0.18s steps(2, end) infinite;
-  overflow: hidden;
-}
-
-.container::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0) 0 2px,
-      rgba(0, 0, 0, 0.27) 3px 4px
-    ),
-    linear-gradient(
-      90deg,
-      rgba(255, 0, 0, 0.04),
-      rgba(0, 255, 255, 0.03),
-      rgba(0, 0, 255, 0.04)
-    );
-  mix-blend-mode: screen;
-  opacity: 0.72;
-}
-
-.container::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.11), transparent 45%),
-    radial-gradient(circle at 50% 50%, transparent 58%, rgba(0, 0, 0, 0.66) 100%);
 }
 
 .top,
@@ -179,6 +193,11 @@ footer p {
 @media (max-width: 700px) {
   body {
     padding: 12px;
+  }
+
+  .crt-page::after {
+    border-width: 12px;
+    border-radius: 18px;
   }
 
   .container {
