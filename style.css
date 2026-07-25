@@ -345,6 +345,33 @@ body {
 /* CELULAR */
 
 @media (max-width: 600px) {
+  .paper {
+    animation: none;
+    contain: layout paint style;
+    will-change: transform, opacity;
+  }
+
+  .folded-face {
+    filter: none;
+  }
+
+  .panel-1,
+  .panel-2,
+  .panel-3,
+  .panel-4 {
+    filter: none;
+  }
+
+  .open-face {
+    box-shadow:
+      0 16px 40px rgba(0, 0, 0, 0.72),
+      inset 0 0 18px rgba(0, 0, 0, 0.06);
+  }
+
+  .open-face::before {
+    display: none;
+  }
+
   .paper.is-open {
     width: 88vw;
     height: 72vh;
@@ -352,6 +379,7 @@ body {
 
   .note-text {
     padding: 38px 24px 34px 58px;
+    -webkit-overflow-scrolling: touch;
   }
 
   .note-text p {
@@ -393,5 +421,9 @@ body {
     --scale: 0.4;
     --move-x: -8px;
     --move-y: 26px;
+  }
+
+  .paper.disappear {
+    filter: none;
   }
 }
