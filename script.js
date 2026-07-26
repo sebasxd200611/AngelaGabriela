@@ -3,13 +3,10 @@ const hint = document.getElementById("hint");
 const audio = document.getElementById("bg-audio");
 
 /*
-  Página final.
-  Tú pediste que lleve a /Cariño.
-
-  Si Neocities no abre /Cariño, cambia esta línea por:
-  const finalPage = "/Cariño.html";
+  Página final. Usamos una ruta relativa para que funcione igual en local,
+  Neocities o cualquier subdirectorio donde se publique el sitio.
 */
-const finalPage = "/Carino.html";
+const finalPage = "Carino.html";
 
 let isOpen = false;
 let openClicks = 0;
@@ -42,6 +39,7 @@ function openPaper() {
   paper.classList.remove("is-folded");
   paper.classList.remove("mobile-preview");
   paper.classList.add("is-open");
+  paper.setAttribute("aria-expanded", "true");
 
   hint.textContent = "haz clic en la nota";
 }
