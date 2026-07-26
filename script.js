@@ -6,7 +6,7 @@ const audio = document.getElementById("bg-audio");
   Página final. Usamos una ruta relativa para que funcione igual en local,
   Neocities o cualquier subdirectorio donde se publique el sitio.
 */
-const finalPage = "Carino.html";
+const finalPage = "/Carino";
 
 let isOpen = false;
 let openClicks = 0;
